@@ -23,7 +23,8 @@ namespace ImportEmail.Controllers
         {
             try
             {
-                _xml.CheckXmlTags(emailText);
+                _xml.HasTotalTag(emailText);
+                _xml.HasPairTags(emailText);
             }
             catch (Exception ex)
             {

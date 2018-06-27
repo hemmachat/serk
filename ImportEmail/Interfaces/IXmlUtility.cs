@@ -1,7 +1,12 @@
-﻿namespace ImportEmail.Interfaces
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
+
+namespace ImportEmail.Interfaces
 {
     public interface IXmlUtility
     {
-        bool CheckXmlTags(string emailText);
+        XDocument ExtractXmlValues(string emailText);
+        bool HasTotalTag(string emailText);
+        bool HasPairTags(string emailText);
     }
 }
