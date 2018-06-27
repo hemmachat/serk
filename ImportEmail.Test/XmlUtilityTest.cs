@@ -28,9 +28,8 @@ namespace ImportEmail.Test
                     Ivan";
 
             var xml = new XmlUility();
-            var result = xml.CheckOpenCloseTags(text);
 
-            Assert.True(result);
+            Assert.True(xml.CheckXmlTags(text));
         }
 
         [Fact]
@@ -53,7 +52,7 @@ namespace ImportEmail.Test
                     Ivan";
 
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal("Missing '<total>' XML tag.", ex.Message);
         }
@@ -76,7 +75,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'expense'.", ex.Message);
         }
@@ -99,7 +98,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'expense'.", ex.Message);
         }
@@ -122,7 +121,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'expense'.", ex.Message);
         }
@@ -146,7 +145,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'cost_centre'.", ex.Message);
         }
@@ -170,7 +169,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'cost_centre'.", ex.Message);
         }
@@ -194,7 +193,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'cost_centre'.", ex.Message);
         }
@@ -217,7 +216,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'total'.", ex.Message);
         }
@@ -240,7 +239,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'payment_method'.", ex.Message);
         }
@@ -263,7 +262,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'payment_method'.", ex.Message);
         }
@@ -286,7 +285,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'payment_method'.", ex.Message);
         }
@@ -309,7 +308,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'vendor'.", ex.Message);
         }
@@ -332,7 +331,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'vendor'.", ex.Message);
         }
@@ -355,7 +354,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'vendor'.", ex.Message);
         }
@@ -380,7 +379,7 @@ namespace ImportEmail.Test
                     Ivan";
 
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'description'.", ex.Message);
         }
@@ -405,7 +404,7 @@ namespace ImportEmail.Test
                     Ivan";
 
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'description'.", ex.Message);
         }
@@ -430,7 +429,7 @@ namespace ImportEmail.Test
                     Ivan";
 
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'description'.", ex.Message);
         }
@@ -455,7 +454,7 @@ namespace ImportEmail.Test
                     Ivan";
 
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'date'.", ex.Message);
         }
@@ -480,7 +479,7 @@ namespace ImportEmail.Test
                     Ivan";
 
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'date'.", ex.Message);
         }
@@ -505,7 +504,7 @@ namespace ImportEmail.Test
                     Ivan";
 
             var xml = new XmlUility();
-            Exception ex = Assert.Throws<Exception>(() => xml.CheckOpenCloseTags(text));
+            Exception ex = Assert.Throws<Exception>(() => xml.CheckXmlTags(text));
 
             Assert.Equal($"No matching XML tag: 'date'.", ex.Message);
         }

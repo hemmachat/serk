@@ -2,6 +2,6 @@
 {
     public interface IXmlUtility
     {
-        bool CheckOpenCloseTags(string emailText);
+        bool CheckXmlTags(string emailText);
     }
 }

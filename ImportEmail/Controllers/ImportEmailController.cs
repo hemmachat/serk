@@ -23,7 +23,7 @@ namespace ImportEmail.Controllers
         {
             try
             {
-                _xml.CheckOpenCloseTags(emailText);
+                _xml.CheckXmlTags(emailText);
             }
             catch (Exception ex)
             {
