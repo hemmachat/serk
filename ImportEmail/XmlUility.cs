@@ -10,8 +10,8 @@ namespace ImportEmail
 {
     public class XmlUility : IXmlUtility
     {
-        private readonly string[] parentTags = { "expense", "vendor", "description", "date" };
-        private readonly string[] expenseTags = { "cost_centre", "total", "payment_method" };
+        private readonly string[] parentTags = { EXPENSE_TEXT, "vendor", "description", "date" };
+        private readonly string[] expenseTags = { COST_CENTRE_TEXT, "total", "payment_method" };
         private const string MID_XML_CONTENT = @">[\S\s]*<\/";
         private const string EXPENSE_TEXT = "expense";
         private const string COST_CENTRE_TEXT = "cost_centre";
@@ -19,7 +19,6 @@ namespace ImportEmail
 
         public bool HasPairTags(string emailText)
         {
-            // check for the pair of openning/closing tags
             var allTags = parentTags.Concat(expenseTags);
 
             foreach (var tag in allTags)
@@ -48,31 +47,17 @@ namespace ImportEmail
 
         public XDocument ExtractXmlValues(string emailText)
         {
-            var expenseText = "";
             XDocument xdoc = new XDocument(new XElement(REQUEST_TEXT));
+            ExtractParents(emailText, xdoc);
+            var expenseNode = ExtractExpenseNode(emailText);
+            ExtractExpenseChildren(expenseNode, xdoc);
+            UpdateCostCentre(xdoc);
 
-            // parents
-            foreach (var tag in parentTags)
-            {
-                Regex pairRegex = new Regex("<" + tag + MID_XML_CONTENT + tag + ">");
+            return xdoc;
+        }
 
-                if (pairRegex.IsMatch(emailText))
-                {
-                    var content = pairRegex.Match(emailText).Value;
-
-                    if (tag == EXPENSE_TEXT)
-                    {
-                        expenseText = content;
-                    }
-                    else
-                    {
-                        var element = XElement.Parse(RemoveWhitespace(content));
-                        xdoc.Root.Add(element);
-                    }
-                }
-            }
-
-            // children of expense
+        private void ExtractExpenseChildren(string expenseText, XDocument xdoc)
+        {
             xdoc.Root.Add(new XElement(EXPENSE_TEXT));
 
             foreach (var tag in expenseTags)
@@ -85,10 +70,33 @@ namespace ImportEmail
                     xdoc.Root.Element(EXPENSE_TEXT).Add(XElement.Parse(RemoveWhitespace(content)));
                 }
             }
+        }
 
-            UpdateCostCentre(xdoc);
+        private string ExtractExpenseNode(string emailText)
+        {
+            Regex expenseText = new Regex("<" + EXPENSE_TEXT + MID_XML_CONTENT + EXPENSE_TEXT + ">");
 
-            return xdoc;
+            return expenseText.Match(emailText).Value;
+        }
+
+        private void ExtractParents(string emailText, XDocument xdoc)
+        {
+            foreach (var tag in parentTags)
+            {
+                // skip expense node as we have another function to handle it
+                if (tag == EXPENSE_TEXT)
+                {
+                    continue;
+                }
+
+                Regex pairRegex = new Regex("<" + tag + MID_XML_CONTENT + tag + ">");
+
+                if (pairRegex.IsMatch(emailText))
+                {
+                    var content = pairRegex.Match(emailText).Value;
+                    xdoc.Root.Add(XElement.Parse(RemoveWhitespace(content)));
+                }
+            }
         }
 
         private void UpdateCostCentre(XDocument xdoc)
