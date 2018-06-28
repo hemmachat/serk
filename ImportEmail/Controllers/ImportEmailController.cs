@@ -11,24 +11,33 @@ namespace ImportEmail.Controllers
 {
     public class ImportEmailController : ApiController
     {
-        private IXmlUtility _xml;
+        private readonly IXmlUtility _xml;
 
         public ImportEmailController(IXmlUtility xml)
         {
             _xml = xml;
         }
 
-        [HttpGet]
-        public void Import(string emailText)
+        [Route("ImportText")]
+        public IHttpActionResult ImportText(string emailText)
         {
             try
             {
-                _xml.HasTotalTag(emailText);
-                _xml.HasPairTags(emailText);
+                var validTotal = _xml.HasTotalTag(emailText);
+                var validPairs = _xml.HasPairTags(emailText);
+
+                if (validTotal && validPairs)
+                {
+                    var xdoc = _xml.ExtractXmlValues(emailText);
+
+                    return Json(xdoc);
+                }
+
+                return BadRequest("Invalid email text.");
             }
             catch (Exception ex)
             {
-
+                return BadRequest(ex.Message);
             }
         }
 
