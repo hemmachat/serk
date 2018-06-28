@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Text.RegularExpressions;
 using ImportEmail.Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace ImportEmail.Controllers
 {
@@ -18,9 +19,23 @@ namespace ImportEmail.Controllers
             _xml = xml;
         }
 
-        [Route("ImportText")]
-        public IHttpActionResult ImportText(string emailText)
+        [HttpGet]
+        public IHttpActionResult ImportText()
         {
+            return Ok("Please use POST.");
+        }
+
+        // using POST because we might have a data adding functionality in the future
+        [HttpPost]
+        public IHttpActionResult ImportText([FromBody] JObject body)
+        {
+            var emailText = body["emailText"].ToString();
+
+            if (string.IsNullOrEmpty(emailText))
+            {
+                return BadRequest("Empty email text.");
+            }
+
             try
             {
                 var validTotal = _xml.HasTotalTag(emailText);
@@ -29,6 +44,8 @@ namespace ImportEmail.Controllers
                 if (validTotal && validPairs)
                 {
                     var xdoc = _xml.ExtractXmlValues(emailText);
+
+                    // some adding functionality
 
                     return Json(xdoc);
                 }
