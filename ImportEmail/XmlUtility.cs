@@ -39,9 +39,9 @@ namespace ImportEmail
 
         public bool HasTotalTag(string emailText)
         {
-            if (emailText.IndexOf("<total>") == -1)
+            if (emailText.IndexOf($"<{TOTAL_TEXT}>") == -1)
             {
-                throw new ApiException("Missing '<total>' XML tag.");
+                throw new ApiException($"Missing '<{TOTAL_TEXT}>' XML tag.");
             }
 
             return true;
@@ -64,7 +64,7 @@ namespace ImportEmail
 
             foreach (var tag in expenseTags)
             {
-                Regex pairRegex = new Regex("<" + tag + MID_XML_CONTENT + tag + ">");
+                Regex pairRegex = new Regex($"<{tag}{MID_XML_CONTENT}{tag}>");
 
                 if (pairRegex.IsMatch(expenseText))
                 {
@@ -83,7 +83,7 @@ namespace ImportEmail
 
         private string ExtractExpenseNode(string emailText)
         {
-            Regex expenseText = new Regex("<" + EXPENSE_TEXT + MID_XML_CONTENT + EXPENSE_TEXT + ">");
+            Regex expenseText = new Regex($"<{EXPENSE_TEXT}{MID_XML_CONTENT}{EXPENSE_TEXT}>");
 
             return expenseText.Match(emailText).Value;
         }
@@ -98,7 +98,7 @@ namespace ImportEmail
                     continue;
                 }
 
-                Regex pairRegex = new Regex("<" + tag + MID_XML_CONTENT + tag + ">");
+                Regex pairRegex = new Regex($"<{tag}{MID_XML_CONTENT}{tag}>");
 
                 if (pairRegex.IsMatch(emailText))
                 {
@@ -118,7 +118,7 @@ namespace ImportEmail
 
         private string ParseTotalText(string totalNode)
         {
-            var totalString = totalNode.Replace("<" + TOTAL_TEXT + ">", "").Replace("</" + TOTAL_TEXT + ">", "");
+            var totalString = totalNode.Replace($"<{TOTAL_TEXT}>", "").Replace($"</{TOTAL_TEXT}>", "");
             decimal val;
 
             if (decimal.TryParse(totalString, out val))
@@ -132,12 +132,12 @@ namespace ImportEmail
         private string ParseDateText(string dateNode)
         {
             DateTime val;
-            var dateString = dateNode.Replace("<" + DATE_TEXT + ">", "").Replace("</" + DATE_TEXT + ">", "");
+            var dateString = dateNode.Replace($"<{DATE_TEXT}>", "").Replace($"</{DATE_TEXT}>", "");
             var cleanDateString = RemoveDayOfTheWeek(dateString);
 
             if (DateTime.TryParse(cleanDateString, out val))
             {
-                return "<" + DATE_TEXT + ">" + val.ToString("yyyy-MM-dd HH:mm:ss") + "</" + DATE_TEXT + ">";
+                return $"<{DATE_TEXT}>{val.ToString("yyyy-MM-dd HH:mm:ss")}</{DATE_TEXT}>";
             }
 
             throw new ApiException($"Invalid date: '{dateString}'.");
