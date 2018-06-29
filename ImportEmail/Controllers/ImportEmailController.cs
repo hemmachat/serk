@@ -12,6 +12,7 @@ namespace ImportEmail.Controllers
 {
     public class ImportEmailController : ApiController
     {
+        private const string EMAIL_TEXT = "emailText";
         private readonly IXmlUtility _xml;
 
         public ImportEmailController(IXmlUtility xml)
@@ -29,7 +30,7 @@ namespace ImportEmail.Controllers
         [HttpPost]
         public IHttpActionResult ImportText([FromBody] JObject body)
         {
-            if (body == null || string.IsNullOrEmpty(body["emailText"].ToString()))
+            if (body == null || string.IsNullOrEmpty(body[EMAIL_TEXT].ToString()))
             {
                 return BadRequest("Empty email text.");
             }

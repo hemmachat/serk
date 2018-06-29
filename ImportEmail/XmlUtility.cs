@@ -10,14 +10,18 @@ namespace ImportEmail
 {
     public class XmlUtility : IXmlUtility
     {
-        private const string DATE_TEXT = "date";
-        private readonly string[] parentTags = { EXPENSE_TEXT, "vendor", "description", DATE_TEXT };
-        private const string TOTAL_TEXT = "total";
-        private readonly string[] expenseTags = { COST_CENTRE_TEXT, TOTAL_TEXT, "payment_method" };
+        public static readonly string DATE_TEXT = "date";
+        public static readonly string VENDOR_TEXT = "vendor";
+        public static readonly string DESCRIPTION_TEXT = "description";
+        public static readonly string EXPENSE_TEXT = "expense";
+        public static readonly string COST_CENTRE_TEXT = "cost_centre";
+        public static readonly string REQUEST_TEXT = "request";
+        public static readonly string TOTAL_TEXT = "total";
+        public static readonly string PAYMENT_METHOD_TEXT = "payment_method";
+
+        private readonly string[] parentTags = { EXPENSE_TEXT, VENDOR_TEXT, DESCRIPTION_TEXT, DATE_TEXT };
+        private readonly string[] expenseTags = { COST_CENTRE_TEXT, TOTAL_TEXT, PAYMENT_METHOD_TEXT };
         private const string MID_XML_CONTENT = @">[\S\s]*<\/";
-        private const string EXPENSE_TEXT = "expense";
-        private const string COST_CENTRE_TEXT = "cost_centre";
-        private const string REQUEST_TEXT = "request";
 
         public bool HasPairTags(string emailText)
         {

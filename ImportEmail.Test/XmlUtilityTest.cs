@@ -9,15 +9,6 @@ namespace ImportEmail.Test
 {
     public class UnitTest1
     {
-        private const string REQUEST_TEXT = "request";
-        private const string EXPENSE_TEXT = "expense";
-        private const string TOTAL_TEXT = "total";
-        private const string PAYMENT_TEXT = "payment_method";
-        private const string COST_TEXT = "cost_centre";
-        private const string DATE_TEXT = "date";
-        private const string DESCRIPTION_TEXT = "description";
-        private const string VENDOR_TEXT = "vendor";
-
         [Fact]
         public void Valid_Text()
         {
@@ -665,37 +656,42 @@ namespace ImportEmail.Test
 
         private string GetDate(XDocument xdoc)
         {
-            return xdoc.Element(REQUEST_TEXT).Element(DATE_TEXT).Value;
+            return xdoc.Element(XmlUtility.REQUEST_TEXT).Element(XmlUtility.DATE_TEXT).Value;
         }
 
         private string GetDescription(XDocument xdoc)
         {
-            return xdoc.Element(REQUEST_TEXT).Element(DESCRIPTION_TEXT).Value;
+            return xdoc.Element(XmlUtility.REQUEST_TEXT).Element(XmlUtility.DESCRIPTION_TEXT).Value;
         }
 
         private string GetVendor(XDocument xdoc)
         {
-            return xdoc.Element(REQUEST_TEXT).Element(VENDOR_TEXT).Value;
+            return xdoc.Element(XmlUtility.REQUEST_TEXT).Element(XmlUtility.VENDOR_TEXT).Value;
         }
 
         private string GetPayment(XDocument xdoc)
         {
-            return GetExpense(xdoc).Element(PAYMENT_TEXT).Value;
+            return GetExpense(xdoc).Element(XmlUtility.PAYMENT_METHOD_TEXT).Value;
         }
 
         private static XElement GetExpense(XDocument xdoc)
         {
-            return xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT);
+            return GetRequestNode(xdoc).Element(XmlUtility.EXPENSE_TEXT);
+        }
+
+        private static XElement GetRequestNode(XDocument xdoc)
+        {
+            return xdoc.Element(XmlUtility.REQUEST_TEXT);
         }
 
         private string GetTotal(XDocument xdoc)
         {
-            return GetExpense(xdoc).Element(TOTAL_TEXT).Value;
+            return GetExpense(xdoc).Element(XmlUtility.TOTAL_TEXT).Value;
         }
 
         private string GetCost(XDocument xdoc)
         {
-            return GetExpense(xdoc).Element(COST_TEXT).Value;
+            return GetExpense(xdoc).Element(XmlUtility.COST_CENTRE_TEXT).Value;
         }
     }
 }
