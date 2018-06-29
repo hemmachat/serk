@@ -3,6 +3,7 @@ using System.Linq;
 using Xunit;
 using Moq;
 using ImportEmail;
+using System.Xml.Linq;
 
 namespace ImportEmail.Test
 {
@@ -59,6 +60,99 @@ namespace ImportEmail.Test
             Assert.True(xml.HasPairTags(text));
         }
 
+        [Fact]
+        public void Extract_Values()
+        {
+            var text = @"Hi Yvaine,
+                    Please create an expense claim for the below. Relevant details are marked up as requested…
+                    <expense><cost_centre>DEV002</cost_centre> <total>890.55</total><payment_method>personal
+                    card</payment_method>
+                    </expense>
+                    From: Ivan Castle
+                    Sent: Friday, 16 February 2018 10:32 AM
+                    To: Antoine Lloyd <Antoine.Lloyd@example.com>
+                    Subject: test
+                    Hi Antoine,
+                    Please create a reservation at the <vendor>Viaduct Steakhouse</vendor> our <description>development
+                    team’s project end celebration dinner</description> on <date>Tuesday 27 April 2017</date>. We expect to
+                    arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
+                    Regards,
+                    Ivan";
+            var xml = new XmlUtility();
+            var xdoc = xml.ExtractXmlValues(text);
+
+            Assert.Equal("Viaduct Steakhouse", GetVendor(xdoc));
+            Assert.Equal("development team’s project end celebration dinner", GetDescription(xdoc));
+            Assert.Equal("2017-04-27 00:00:00", GetDate(xdoc));
+            Assert.Equal("DEV002", GetCost(xdoc));
+            Assert.Equal("890.55", GetTotal(xdoc));
+            Assert.Equal("personal card", GetPayment(xdoc));
+        }
+
+        [Fact]
+        public void Extract_Expense_Partial_Values()
+        {
+            var text = @"Hi Yvaine,
+                    Please create an expense claim for the below. Relevant details are marked up as requested…
+                    <expense><cost_centre>DEV002</cost_centre> <total>890.55</total><payment_method>personal
+                    card</payment_method>
+                    </expense>";
+            var xml = new XmlUtility();
+            var xdoc = xml.ExtractXmlValues(text);
+
+            Assert.Equal("DEV002", GetCost(xdoc));
+            Assert.Equal("890.55", GetTotal(xdoc));
+            Assert.Equal("personal card", GetPayment(xdoc));
+        }
+
+        [Fact]
+        public void Extract_Expense_No_Cost_Values()
+        {
+            var text = @"Hi Yvaine,
+                    Please create an expense claim for the below. Relevant details are marked up as requested…
+                    <expense><total>890.55</total><payment_method>personal
+                    card</payment_method>
+                    </expense>";
+            var xml = new XmlUtility();
+            var xdoc = xml.ExtractXmlValues(text);
+
+            Assert.Equal("UNKNOWN", GetCost(xdoc));
+            Assert.Equal("890.55", GetTotal(xdoc));
+            Assert.Equal("personal card", GetPayment(xdoc));
+        }
+
+        [Fact]
+        public void Missing_Date_Text()
+        {
+            var text = @"Hi Yvaine,
+                    Please create an expense claim for the below. Relevant details are marked up as requested…
+                    <expense><cost_centre>DEV002</cost_centre> <total>890.55</total><payment_method>personal
+                    card</payment_method>
+                    </expense>
+                    From: Ivan Castle
+                    Sent: Friday, 16 February 2018 10:32 AM
+                    To: Antoine Lloyd <Antoine.Lloyd@example.com>
+                    Subject: test
+                    Hi Antoine,
+                    Please create a reservation at the <vendor>Viaduct Steakhouse</vendor> our <description>development
+                    team’s project end celebration dinner</description> on Tuesday 27 April 2017. We expect to
+                    arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
+                    Regards,
+                    Ivan";
+
+            var xml = new XmlUtility();
+            var validTotal = xml.HasTotalTag(text);
+            var validPair = xml.HasPairTags(text);
+            var xdoc = xml.ExtractXmlValues(text);
+
+            Assert.True(validTotal);
+            Assert.True(validPair);
+            Assert.Equal("Viaduct Steakhouse", GetVendor(xdoc));
+            Assert.Equal("development team’s project end celebration dinner", GetDescription(xdoc));
+            Assert.Equal("DEV002", GetCost(xdoc));
+            Assert.Equal("890.55", GetTotal(xdoc));
+            Assert.Equal("personal card", GetPayment(xdoc));
+        }
         [Fact]
         public void Missing_Total_Text()
         {
@@ -472,39 +566,6 @@ namespace ImportEmail.Test
         }
 
         [Fact]
-        public void Missing_Date_Text()
-        {
-            var text = @"Hi Yvaine,
-                    Please create an expense claim for the below. Relevant details are marked up as requested…
-                    <expense><cost_centre>DEV002</cost_centre> <total>890.55</total><payment_method>personal
-                    card</payment_method>
-                    </expense>
-                    From: Ivan Castle
-                    Sent: Friday, 16 February 2018 10:32 AM
-                    To: Antoine Lloyd <Antoine.Lloyd@example.com>
-                    Subject: test
-                    Hi Antoine,
-                    Please create a reservation at the <vendor>Viaduct Steakhouse</vendor> our <description>development
-                    team’s project end celebration dinner</description> on Tuesday 27 April 2017. We expect to
-                    arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
-                    Regards,
-                    Ivan";
-
-            var xml = new XmlUtility();
-            var validTotal = xml.HasTotalTag(text);
-            var validPair = xml.HasPairTags(text);
-            var xdoc = xml.ExtractXmlValues(text);
-
-            Assert.True(validTotal);
-            Assert.True(validPair);
-            Assert.Equal("Viaduct Steakhouse", xdoc.Element(REQUEST_TEXT).Element(VENDOR_TEXT).Value);
-            Assert.Equal("development team’s project end celebration dinner", xdoc.Element(REQUEST_TEXT).Element(DESCRIPTION_TEXT).Value);
-            Assert.Equal("DEV002", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(COST_TEXT).Value);
-            Assert.Equal("890.55", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(TOTAL_TEXT).Value);
-            Assert.Equal("personal card", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(PAYMENT_TEXT).Value);
-        }
-
-        [Fact]
         public void Missing_Openning_Date_Text()
         {
             var text = @"Hi Yvaine,
@@ -555,35 +616,6 @@ namespace ImportEmail.Test
         }
 
         [Fact]
-        public void Extract_Values()
-        {
-            var text = @"Hi Yvaine,
-                    Please create an expense claim for the below. Relevant details are marked up as requested…
-                    <expense><cost_centre>DEV002</cost_centre> <total>890.55</total><payment_method>personal
-                    card</payment_method>
-                    </expense>
-                    From: Ivan Castle
-                    Sent: Friday, 16 February 2018 10:32 AM
-                    To: Antoine Lloyd <Antoine.Lloyd@example.com>
-                    Subject: test
-                    Hi Antoine,
-                    Please create a reservation at the <vendor>Viaduct Steakhouse</vendor> our <description>development
-                    team’s project end celebration dinner</description> on <date>Tuesday 27 April 2017</date>. We expect to
-                    arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
-                    Regards,
-                    Ivan";
-            var xml = new XmlUtility();
-            var xdoc = xml.ExtractXmlValues(text);
-
-            Assert.Equal("Viaduct Steakhouse", xdoc.Element(REQUEST_TEXT).Element(VENDOR_TEXT).Value);
-            Assert.Equal("development team’s project end celebration dinner", xdoc.Element(REQUEST_TEXT).Element(DESCRIPTION_TEXT).Value);
-            Assert.Equal("2017-04-27 00:00:00", xdoc.Element(REQUEST_TEXT).Element(DATE_TEXT).Value);
-            Assert.Equal("DEV002", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(COST_TEXT).Value);
-            Assert.Equal("890.55", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(TOTAL_TEXT).Value);
-            Assert.Equal("personal card", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(PAYMENT_TEXT).Value);
-        }
-
-        [Fact]
         public void Extract_Values_Invalid_Date()
         {
             var text = @"Hi Yvaine,
@@ -631,36 +663,39 @@ namespace ImportEmail.Test
             Assert.Equal($"Invalid total: 'abcd'.", ex.Message);
         }
 
-        [Fact]
-        public void Extract_Expense_Partial_Values()
+        private string GetDate(XDocument xdoc)
         {
-            var text = @"Hi Yvaine,
-                    Please create an expense claim for the below. Relevant details are marked up as requested…
-                    <expense><cost_centre>DEV002</cost_centre> <total>890.55</total><payment_method>personal
-                    card</payment_method>
-                    </expense>";
-            var xml = new XmlUtility();
-            var xdoc = xml.ExtractXmlValues(text);
-
-            Assert.Equal("DEV002", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(COST_TEXT).Value);
-            Assert.Equal("890.55", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(TOTAL_TEXT).Value);
-            Assert.Equal("personal card", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(PAYMENT_TEXT).Value);
+            return xdoc.Element(REQUEST_TEXT).Element(DATE_TEXT).Value;
         }
 
-        [Fact]
-        public void Extract_Expense_No_Cost_Values()
+        private string GetDescription(XDocument xdoc)
         {
-            var text = @"Hi Yvaine,
-                    Please create an expense claim for the below. Relevant details are marked up as requested…
-                    <expense><total>890.55</total><payment_method>personal
-                    card</payment_method>
-                    </expense>";
-            var xml = new XmlUtility();
-            var xdoc = xml.ExtractXmlValues(text);
+            return xdoc.Element(REQUEST_TEXT).Element(DESCRIPTION_TEXT).Value;
+        }
 
-            Assert.Equal("UNKNOWN", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(COST_TEXT).Value);
-            Assert.Equal("890.55", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(TOTAL_TEXT).Value);
-            Assert.Equal("personal card", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(PAYMENT_TEXT).Value);
+        private string GetVendor(XDocument xdoc)
+        {
+            return xdoc.Element(REQUEST_TEXT).Element(VENDOR_TEXT).Value;
+        }
+
+        private string GetPayment(XDocument xdoc)
+        {
+            return GetExpense(xdoc).Element(PAYMENT_TEXT).Value;
+        }
+
+        private static XElement GetExpense(XDocument xdoc)
+        {
+            return xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT);
+        }
+
+        private string GetTotal(XDocument xdoc)
+        {
+            return GetExpense(xdoc).Element(TOTAL_TEXT).Value;
+        }
+
+        private string GetCost(XDocument xdoc)
+        {
+            return GetExpense(xdoc).Element(COST_TEXT).Value;
         }
     }
 }
