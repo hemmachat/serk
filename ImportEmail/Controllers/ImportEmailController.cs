@@ -29,15 +29,14 @@ namespace ImportEmail.Controllers
         [HttpPost]
         public IHttpActionResult ImportText([FromBody] JObject body)
         {
-            var emailText = body["emailText"].ToString();
-
-            if (string.IsNullOrEmpty(emailText))
+            if (body == null || string.IsNullOrEmpty(body["emailText"].ToString()))
             {
                 return BadRequest("Empty email text.");
             }
 
             try
             {
+                var emailText = body["emailText"].ToString();
                 var validTotal = _xml.HasTotalTag(emailText);
                 var validPairs = _xml.HasPairTags(emailText);
 

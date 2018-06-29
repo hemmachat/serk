@@ -10,8 +10,10 @@ namespace ImportEmail
 {
     public class XmlUtility : IXmlUtility
     {
-        private readonly string[] parentTags = { EXPENSE_TEXT, "vendor", "description", "date" };
-        private readonly string[] expenseTags = { COST_CENTRE_TEXT, "total", "payment_method" };
+        private const string DATE_TEXT = "date";
+        private readonly string[] parentTags = { EXPENSE_TEXT, "vendor", "description", DATE_TEXT };
+        private const string TOTAL_TEXT = "total";
+        private readonly string[] expenseTags = { COST_CENTRE_TEXT, TOTAL_TEXT, "payment_method" };
         private const string MID_XML_CONTENT = @">[\S\s]*<\/";
         private const string EXPENSE_TEXT = "expense";
         private const string COST_CENTRE_TEXT = "cost_centre";
@@ -67,7 +69,14 @@ namespace ImportEmail
                 if (pairRegex.IsMatch(expenseText))
                 {
                     var content = pairRegex.Match(expenseText).Value;
-                    xdoc.Root.Element(EXPENSE_TEXT).Add(XElement.Parse(RemoveWhitespace(content)));
+                    var totalString = content;
+
+                    if (tag == TOTAL_TEXT)
+                    {
+                        totalString = ParseTotalText(content);
+                    }
+
+                    xdoc.Root.Element(EXPENSE_TEXT).Add(XElement.Parse(RemoveWhitespace(totalString)));
                 }
             }
         }
@@ -94,9 +103,65 @@ namespace ImportEmail
                 if (pairRegex.IsMatch(emailText))
                 {
                     var content = pairRegex.Match(emailText).Value;
-                    xdoc.Root.Add(XElement.Parse(RemoveWhitespace(content)));
+                    var dateString = content;
+
+                    if (tag == DATE_TEXT)
+                    {
+                        dateString = ParseDateText(content);
+                    }
+
+                    xdoc.Root.Add(XElement.Parse(RemoveWhitespace(dateString)));
                 }
             }
+        }
+
+
+        private string ParseTotalText(string totalNode)
+        {
+            var totalString = totalNode.Replace("<" + TOTAL_TEXT + ">", "").Replace("</" + TOTAL_TEXT + ">", "");
+            decimal val;
+
+            if (decimal.TryParse(totalString, out val))
+            {
+                return totalNode;
+            }
+
+            throw new Exception($"Invalid total: '{totalString}'.");
+        }
+
+        private string ParseDateText(string dateNode)
+        {
+            DateTime val;
+            var dateString = dateNode.Replace("<" + DATE_TEXT + ">", "").Replace("</" + DATE_TEXT + ">", "");
+            var cleanDateString = RemoveDayOfTheWeek(dateString);
+
+            if (DateTime.TryParse(cleanDateString, out val))
+            {
+                return "<" + DATE_TEXT + ">" + val.ToString("yyyy-MM-dd HH:mm:ss") + "</" + DATE_TEXT + ">";
+            }
+
+            throw new Exception($"Invalid date: '{dateString}'.");
+        }
+
+        private string RemoveDayOfTheWeek(string dateString)
+        {
+            string[] dayOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+            var cleanDateString = "";
+
+            // remove day of week text
+            foreach (var day in dayOfWeek)
+            {
+                var regex = new Regex(@"\s*" + day.ToLower() + @"\s*");
+
+                if (regex.IsMatch(dateString.ToLower()))
+                {
+                    cleanDateString = regex.Replace(dateString.ToLower(), "");
+
+                    break;
+                }
+            }
+
+            return cleanDateString;
         }
 
         private void UpdateCostCentre(XDocument xdoc)
