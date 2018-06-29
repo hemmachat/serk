@@ -4,7 +4,7 @@ using Xunit;
 using Moq;
 using ImportEmail;
 
-namespace ImportEmail.Test
+namespace ImportEmailTest
 {
     public class UnitTest1
     {
@@ -36,7 +36,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var validTotal = xml.HasTotalTag(text);
             var validTags = xml.HasPairTags(text);
 
@@ -53,7 +53,7 @@ namespace ImportEmail.Test
                     card</payment_method>
                     </expense>";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
 
             Assert.True(xml.HasTotalTag(text));
             Assert.True(xml.HasPairTags(text));
@@ -78,7 +78,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasTotalTag(text));
 
             Assert.Equal("Missing '<total>' XML tag.", ex.Message);
@@ -101,7 +101,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var validTotal = xml.HasTotalTag(text);
             var validPair = xml.HasPairTags(text);
 
@@ -126,7 +126,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'expense'.", ex.Message);
@@ -149,7 +149,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'expense'.", ex.Message);
@@ -173,7 +173,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var validTotal = xml.HasTotalTag(text);
             var validPair = xml.HasPairTags(text);
 
@@ -199,7 +199,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'cost_centre'.", ex.Message);
@@ -223,7 +223,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'cost_centre'.", ex.Message);
@@ -246,7 +246,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'total'.", ex.Message);
@@ -269,7 +269,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var validTotal = xml.HasTotalTag(text);
             var validPair = xml.HasPairTags(text);
 
@@ -294,7 +294,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'payment_method'.", ex.Message);
@@ -317,7 +317,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'payment_method'.", ex.Message);
@@ -340,7 +340,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var validTotal = xml.HasTotalTag(text);
             var validPair = xml.HasPairTags(text);
 
@@ -365,7 +365,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'vendor'.", ex.Message);
@@ -388,7 +388,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'vendor'.", ex.Message);
@@ -413,7 +413,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var validTotal = xml.HasTotalTag(text);
             var validPair = xml.HasPairTags(text);
 
@@ -440,7 +440,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'description'.", ex.Message);
@@ -465,7 +465,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'description'.", ex.Message);
@@ -490,7 +490,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var validTotal = xml.HasTotalTag(text);
             var validPair = xml.HasPairTags(text);
 
@@ -517,7 +517,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'date'.", ex.Message);
@@ -542,7 +542,7 @@ namespace ImportEmail.Test
                     Regards,
                     Ivan";
 
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             Exception ex = Assert.Throws<Exception>(() => xml.HasPairTags(text));
 
             Assert.Equal($"No matching XML tag: 'date'.", ex.Message);
@@ -566,7 +566,7 @@ namespace ImportEmail.Test
                     arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
                     Regards,
                     Ivan";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var xdoc = xml.ExtractXmlValues(text);
 
             Assert.Equal("Viaduct Steakhouse", xdoc.Element(REQUEST_TEXT).Element(VENDOR_TEXT).Value);
@@ -585,7 +585,7 @@ namespace ImportEmail.Test
                     <expense><cost_centre>DEV002</cost_centre> <total>890.55</total><payment_method>personal
                     card</payment_method>
                     </expense>";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var xdoc = xml.ExtractXmlValues(text);
 
             Assert.Equal("DEV002", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(COST_TEXT).Value);
@@ -601,7 +601,7 @@ namespace ImportEmail.Test
                     <expense><total>890.55</total><payment_method>personal
                     card</payment_method>
                     </expense>";
-            var xml = new XmlUtility();
+            var xml = new XmlUility();
             var xdoc = xml.ExtractXmlValues(text);
 
             Assert.Equal("UNKNOWN", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(COST_TEXT).Value);
