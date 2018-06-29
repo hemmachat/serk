@@ -54,6 +54,56 @@ namespace ImportEmail.Test
         }
 
         [Fact]
+        public void Valid_Text_No_Cost_Centre()
+        {
+            var json = @"{""emailText"":""Hi Yvaine,
+                Please create an expense claim for the below. Relevant details are marked up as requested…
+                <expense> <total>890.55</total><payment_method>personal
+                card</payment_method>
+                </expense>
+                From: Ivan Castle
+                Sent: Friday, 16 February 2018 10:32 AM
+                To: Antoine Lloyd <Antoine.Lloyd@example.com>
+                Subject: test
+                Hi Antoine,
+                Please create a reservation at the <vendor>Viaduct Steakhouse</vendor> our <description>development
+                team’s project end celebration dinner</description> on <date>Tuesday 27 April 2017</date>. We expect to
+                arrive around 7.15pm. Approximately 12 people but I’ll confirm exact numbers closer to the day.
+                Regards,
+                Ivan""}";
+            var response = CreateRequest(URL, HttpMethod.Post, json);
+            var result = response.Content.ReadAsStringAsync().Result;
+            var message = JsonConvert.DeserializeObject<XmlRoot>(result).Request;
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("UNKNOWN", message.Expense.CostCentre);
+            Assert.Equal(890.55m, message.Expense.Total);
+            Assert.Equal("personal card", message.Expense.PaymentMethod);
+            Assert.Equal("Viaduct Steakhouse", message.Vendor);
+            Assert.Equal("development team’s project end celebration dinner", message.Description);
+            Assert.Equal(new DateTime(2017, 4, 27), message.Date);
+        }
+
+        [Fact]
+        public void Valid_Partial_No_Cost_Centre()
+        {
+            var json = @"{""emailText"":""Hi Yvaine,
+                    Please create an expense claim for the below. Relevant details are marked up as requested…
+                    <expense><total>890.55</total><payment_method>personal
+                    card</payment_method>
+                    </expense>""}";
+
+            var response = CreateRequest(URL, HttpMethod.Post, json);
+            var result = response.Content.ReadAsStringAsync().Result;
+            var message = JsonConvert.DeserializeObject<XmlRoot>(result).Request;
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("UNKNOWN", message.Expense.CostCentre);
+            Assert.Equal(890.55m, message.Expense.Total);
+            Assert.Equal("personal card", message.Expense.PaymentMethod);
+        }
+
+        [Fact]
         public void Empty_Text()
         {
             var json = "";

@@ -493,9 +493,15 @@ namespace ImportEmail.Test
             var xml = new XmlUtility();
             var validTotal = xml.HasTotalTag(text);
             var validPair = xml.HasPairTags(text);
+            var xdoc = xml.ExtractXmlValues(text);
 
             Assert.True(validTotal);
             Assert.True(validPair);
+            Assert.Equal("Viaduct Steakhouse", xdoc.Element(REQUEST_TEXT).Element(VENDOR_TEXT).Value);
+            Assert.Equal("development team’s project end celebration dinner", xdoc.Element(REQUEST_TEXT).Element(DESCRIPTION_TEXT).Value);
+            Assert.Equal("DEV002", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(COST_TEXT).Value);
+            Assert.Equal("890.55", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(TOTAL_TEXT).Value);
+            Assert.Equal("personal card", xdoc.Element(REQUEST_TEXT).Element(EXPENSE_TEXT).Element(PAYMENT_TEXT).Value);
         }
 
         [Fact]
