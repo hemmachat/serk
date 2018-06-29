@@ -49,7 +49,7 @@ namespace ImportEmail.Controllers
                     return Json(xdoc);
                 }
 
-                return BadRequest("Invalid email text.");
+                return BadRequest("Unknown error.");
             }
             catch (Exception ex)
             {

@@ -30,7 +30,7 @@ namespace ImportEmail
 
                 if (openCloseRegex.IsMatch(emailText) && !pairRegex.IsMatch(emailText))
                 {
-                    throw new Exception($"No matching XML tag: '{tag}'.");
+                    throw new ApiException($"No matching XML tag: '{tag}'.");
                 }
             }
 
@@ -41,7 +41,7 @@ namespace ImportEmail
         {
             if (emailText.IndexOf("<total>") == -1)
             {
-                throw new Exception("Missing '<total>' XML tag.");
+                throw new ApiException("Missing '<total>' XML tag.");
             }
 
             return true;
@@ -126,7 +126,7 @@ namespace ImportEmail
                 return totalNode;
             }
 
-            throw new Exception($"Invalid total: '{totalString}'.");
+            throw new ApiException($"Invalid total: '{totalString}'.");
         }
 
         private string ParseDateText(string dateNode)
@@ -140,7 +140,7 @@ namespace ImportEmail
                 return "<" + DATE_TEXT + ">" + val.ToString("yyyy-MM-dd HH:mm:ss") + "</" + DATE_TEXT + ">";
             }
 
-            throw new Exception($"Invalid date: '{dateString}'.");
+            throw new ApiException($"Invalid date: '{dateString}'.");
         }
 
         private string RemoveDayOfTheWeek(string dateString)
