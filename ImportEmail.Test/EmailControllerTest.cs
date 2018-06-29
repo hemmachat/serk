@@ -1,26 +1,18 @@
 ﻿using ImportEmail.Controllers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using System.Web.Http.SelfHost;
 using Xunit;
-using Moq;
 using Newtonsoft.Json;
 using ImportEmail.Models;
 using System.Net;
 
 namespace ImportEmail.Test
 {
-    public class ImportEmailControllerTest : WebApiTestBase
+    public class EmailControllerTest : WebApiTestBase
     {
-        private const string URL = "/api/importemail/importtext";
+        private const string URL = "/api/email";
 
-        public ImportEmailControllerTest() : base(typeof(ImportEmailController)) { }
+        public EmailControllerTest() : base(typeof(EmailController)) { }
 
         [Fact]
         public void Valid_Text()

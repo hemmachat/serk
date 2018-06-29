@@ -97,7 +97,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ImportEmailControllerTest.cs" />
+    <Compile Include="EmailControllerTest.cs" />
     <Compile Include="ResponseMessage.cs" />
     <Compile Include="WebApiTestBase.cs" />
     <Compile Include="XmlUtilityTest.cs" />

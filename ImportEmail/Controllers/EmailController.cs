@@ -10,25 +10,23 @@ using Newtonsoft.Json.Linq;
 
 namespace ImportEmail.Controllers
 {
-    public class ImportEmailController : ApiController
+    public class EmailController : ApiController
     {
         private const string EMAIL_TEXT = "emailText";
         private readonly IXmlUtility _xml;
 
-        public ImportEmailController(IXmlUtility xml)
+        public EmailController(IXmlUtility xml)
         {
             _xml = xml;
         }
 
-        [HttpGet]
-        public IHttpActionResult ImportText()
+        public IHttpActionResult Get()
         {
             return Ok("Please use POST.");
         }
 
         // using POST because we might have a data adding functionality in the future
-        [HttpPost]
-        public IHttpActionResult ImportText([FromBody] JObject body)
+        public IHttpActionResult Post([FromBody] JObject body)
         {
             if (body == null || string.IsNullOrEmpty(body[EMAIL_TEXT].ToString()))
             {
