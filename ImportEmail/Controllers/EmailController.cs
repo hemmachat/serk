@@ -35,7 +35,7 @@ namespace ImportEmail.Controllers
 
             try
             {
-                var emailText = body["emailText"].ToString();
+                var emailText = body[EMAIL_TEXT].ToString();
                 var validTotal = _xml.HasTotalTag(emailText);
                 var validPairs = _xml.HasPairTags(emailText);
 
